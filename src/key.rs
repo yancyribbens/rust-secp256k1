@@ -21,6 +21,7 @@ use core::{fmt, str};
 
 use super::{from_hex, Secp256k1};
 use super::Error::{self, InvalidPublicKey, InvalidSecretKey};
+use super::{Message};
 use Signing;
 use Verification;
 use constants;
@@ -214,11 +215,27 @@ impl PublicKey {
         &mut self.0 as *mut _
     }
 
+    /// siG=R−h(i, R)V
+    #[inline]
+    pub fn schnorrsig_sig_pubkey<C: Signing>(secp: &Secp256k1<C>,
+                                             r: &PublicKey,
+                                             msg: &Message,
+                                             pk: &PublicKey) -> PublicKey {
+        let mut sp = ffi::PublicKey::new();
+        unsafe {
+            let res = ffi::secp256k1_schnorrsig_sig_pubkey(
+                secp.ctx, &mut sp, r.as_ptr(), msg.as_c_ptr(), pk.as_ptr());
+            debug_assert_eq!(res, 1);
+        }
+        PublicKey(sp)
+    }
+
     /// Creates a new public key from a secret key.
     #[inline]
     pub fn from_secret_key<C: Signing>(secp: &Secp256k1<C>,
                            sk: &SecretKey)
                            -> PublicKey {
+        //here's the rust part of the interface
         let mut pk = ffi::PublicKey::new();
         unsafe {
             // We can assume the return value because it's not possible to construct

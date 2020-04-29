@@ -558,6 +558,24 @@ SECP256K1_API SECP256K1_WARN_UNUSED_RESULT int rustsecp256k1_v0_1_1_ec_pubkey_cr
     const unsigned char *seckey
 ) SECP256K1_ARG_NONNULL(1) SECP256K1_ARG_NONNULL(2) SECP256K1_ARG_NONNULL(3);
 
+/** Computes the signature times the generator from a pre-committed R value.
+ *
+ * Returns 1 on success, 0 on failure.
+ *  Args:    ctx: pointer to a context object, initialized for signing (cannot be NULL)
+ *  Out:     sp: pointer to the returned signature pubkey (cannot be NULL)
+ *  In:       r: the pre-committed R value for the signature (cannot be NULL)
+ *         msg32: the 32-byte message being signed (cannot be NULL)
+ *            pk: pointer to a public key of the signer (cannot be NULL)
+ */
+SECP256K1_API SECP256K1_WARN_UNUSED_RESULT int rustsecp256k1_v0_1_1_schnorrsig_sig_pubkey(
+    const rustsecp256k1_v0_1_1_context* ctx,
+    rustsecp256k1_v0_1_1_pubkey *sp,
+    rustsecp256k1_v0_1_1_pubkey *r,
+    const unsigned char *msg32,
+    const rustsecp256k1_v0_1_1_pubkey *pk
+) SECP256K1_ARG_NONNULL(1) SECP256K1_ARG_NONNULL(2) SECP256K1_ARG_NONNULL(3) SECP256K1_ARG_NONNULL(4) SECP256K1_ARG_NONNULL(5);
+
+
 /** Negates a private key in place.
  *
  *  Returns: 1 always

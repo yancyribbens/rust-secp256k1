@@ -240,6 +240,8 @@ extern "C" {
     pub fn secp256k1_ec_pubkey_create(cx: *const Context, pk: *mut PublicKey,
                                       sk: *const c_uchar) -> c_int;
 
+    #[cfg_attr(not(feature = "external-symbols"), link_name = "rustsecp256k1_v0_1_1_schnorrsig_sig_pubkey")]
+    pub fn secp256k1_schnorrsig_sig_pubkey(cx: *const Context, sp: *mut PublicKey, r: *const PublicKey, msg32: *const c_uchar, pk: *const PublicKey) -> c_int;
 //TODO secp256k1_ec_privkey_export
 //TODO secp256k1_ec_privkey_import
 
